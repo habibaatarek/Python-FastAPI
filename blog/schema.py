@@ -1,15 +1,10 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class Blog(BaseModel):
     title:str
     body:str
-
-class ShowBlog(BaseModel):
-    title: str
-    body: str
-    class Config():
-        from_attributes= True
 
 
 class User(BaseModel):
@@ -20,6 +15,18 @@ class User(BaseModel):
 class ShowUser(BaseModel):
     name: str 
     email: str
-    class Config():
+    blogs: List[Blog]
+    class Config(): 
         from_attributes= True 
+
+class ShowBlog(BaseModel):
+    title: str
+    body: str
+    creator: ShowUser
+
+    class Config():
+        from_attributes= True
     
+class Login(BaseModel):
+    username: str 
+    password: str 
