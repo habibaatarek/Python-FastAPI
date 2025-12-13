@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Response
-from blog import schema, database
+from blog import schema, database, oauth2
 from typing import List
 from sqlalchemy.orm import Session
 from ..repository import blog
@@ -13,7 +13,7 @@ get_db= database.get_db
 
 # get all blogs
 @router.get('/', response_model=List[schema.ShowBlog])
-def all(db : Session = Depends(get_db)):
+def all(db : Session = Depends(get_db), get_current_user: schema.User = Depends(oauth2.get_current_user)):
     return blog.get_all(db)    
 
 # create a blog
@@ -33,5 +33,5 @@ def update(id: int, request: schema.Blog, db : Session = Depends(get_db)):
 
 # get blog by id
 @router.get('/{id}', status_code=200, response_model=schema.ShowBlog)
-def show(id: int, response: Response, db : Session = Depends(get_db)):
+def show(id: int, db : Session = Depends(get_db)):
     return blog.get_by_id(id, db)
